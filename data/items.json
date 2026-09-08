@@ -1,0 +1,7 @@
+[
+  { "id": "itm-001", "name": "段ボール箱 (M)", "category": "梱包資材", "stock": 42, "reorderPoint": 20, "unitPrice": 85, "updatedAt": "2026-09-01T09:00:00.000Z" },
+  { "id": "itm-002", "name": "OPPテープ 48mm", "category": "梱包資材", "stock": 8, "reorderPoint": 15, "unitPrice": 210, "updatedAt": "2026-09-03T09:00:00.000Z" },
+  { "id": "itm-003", "name": "緩衝材ロール", "category": "梱包資材", "stock": 0, "reorderPoint": 10, "unitPrice": 1200, "updatedAt": "2026-09-05T09:00:00.000Z" },
+  { "id": "itm-004", "name": "宛名ラベル A4", "category": "事務用品", "stock": 120, "reorderPoint": 30, "unitPrice": 15, "updatedAt": "2026-08-28T09:00:00.000Z" },
+  { "id": "itm-005", "name": "バーコードスキャナ", "category": "什器・備品", "stock": 3, "reorderPoint": 2, "unitPrice": 8400, "updatedAt": "2026-08-15T09:00:00.000Z" }
+]
