@@ -2,7 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import type { InventoryItem } from './types';
 
-const DATA_FILE = path.join(process.cwd(), 'data', 'items.json');
+// テスト時などは環境変数 DATA_FILE で保存先を差し替えられる（既定は data/items.json）
+const DATA_FILE = process.env.DATA_FILE || path.join(process.cwd(), 'data', 'items.json');
 
 export function listItems(): InventoryItem[] {
   const raw = fs.readFileSync(DATA_FILE, 'utf8');
@@ -31,10 +32,6 @@ function nextId(items: InventoryItem[]): string {
 }
 
 export function addItem(input: NewItemInput): InventoryItem {
-  if (!input.name.trim()) throw new Error('name is required');
-  if (input.stock < 0 || input.reorderPoint < 0 || input.unitPrice < 0) {
-    throw new Error('stock/reorderPoint/unitPrice must be >= 0');
-  }
   const items = listItems();
   const item: InventoryItem = {
     id: nextId(items),

@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { Metadata } from 'next';
 import './globals.css';
 
@@ -12,9 +13,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen bg-slate-100 text-slate-900">
         <header className="border-b border-slate-200 bg-white">
           <div className="mx-auto max-w-4xl px-4 py-3">
-            <a href="/" className="text-lg font-semibold">
+            <Link href="/" className="text-lg font-semibold">
               在庫管理ダッシュボード
-            </a>
+            </Link>
             <span className="ml-2 text-xs text-slate-400">（デモ・架空データ）</span>
           </div>
         </header>

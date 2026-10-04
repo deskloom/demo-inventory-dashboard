@@ -1,9 +1,10 @@
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getItem } from '@/lib/store';
 import { StockBadge } from '@/components/StockBadge';
 
 const yen = new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' });
-const dateFmt = new Intl.DateTimeFormat('ja-JP', { dateStyle: 'medium', timeStyle: 'short' });
+const dateFmt = new Intl.DateTimeFormat('ja-JP', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Tokyo' });
 
 export const dynamic = 'force-dynamic';
 
@@ -13,9 +14,9 @@ export default function ItemDetailPage({ params }: { params: { id: string } }) {
 
   return (
     <div className="space-y-4">
-      <a href="/" className="text-sm text-blue-600 hover:underline">
+      <Link href="/" className="text-sm text-blue-600 hover:underline">
         ← 一覧に戻る
-      </a>
+      </Link>
       <div className="rounded-lg border border-slate-200 bg-white p-6">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">{item.name}</h1>
