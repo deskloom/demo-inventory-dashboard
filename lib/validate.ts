@@ -1,4 +1,4 @@
-import type { NewItemInput } from './store';
+import type { MovementInput, NewItemInput } from './store';
 
 export class ValidationError extends Error {}
 
@@ -43,4 +43,30 @@ export function parseNewItem(body: unknown): NewItemInput {
     reorderPoint: intField(b.reorderPoint, '発注点', MAX_COUNT),
     unitPrice: intField(b.unitPrice, '単価', MAX_PRICE),
   };
+}
+
+const MAX_NOTE = 100;
+const MAX_QUANTITY = 1_000_000;
+
+/** 入出庫リクエストを検証する。不正なら ValidationError（日本語メッセージ）。 */
+export function parseMovement(body: unknown): MovementInput {
+  if (typeof body !== 'object' || body === null || Array.isArray(body)) {
+    throw new ValidationError('リクエストはJSONオブジェクトで送信してください');
+  }
+  const b = body as Record<string, unknown>;
+
+  if (b.type !== 'in' && b.type !== 'out') {
+    throw new ValidationError('区分は入庫（in）または出庫（out）で指定してください');
+  }
+  if (typeof b.quantity !== 'number' || !Number.isInteger(b.quantity) || b.quantity < 1 || b.quantity > MAX_QUANTITY) {
+    throw new ValidationError(`数量は1以上${MAX_QUANTITY.toLocaleString('ja-JP')}以下の整数で入力してください`);
+  }
+  if (b.note !== undefined && typeof b.note !== 'string') {
+    throw new ValidationError('備考は文字列で入力してください');
+  }
+  const note = ((b.note as string | undefined) ?? '').trim();
+  if (note.length > MAX_NOTE) {
+    throw new ValidationError(`備考は${MAX_NOTE}文字以内で入力してください`);
+  }
+  return { type: b.type, quantity: b.quantity, note };
 }

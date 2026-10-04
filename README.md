@@ -3,11 +3,22 @@
 小規模な在庫管理システムの制作例。Next.js（App Router）+ React + TypeScript + Tailwind CSS で構築。
 業務で受託した案件ではなく、**すべて架空データ**（`data/items.json`）で作成した自主制作のサンプルです。
 
+## スクリーンショット
+| 品目一覧（要発注・欠品の警告） | カテゴリ・品名での絞り込み |
+|---|---|
+| ![品目一覧](docs/screenshots/list.png) | ![絞り込み](docs/screenshots/filter.png) |
+
+| 品目詳細（入出庫フォームと履歴・在庫不足エラー） | モバイル表示（375px） |
+|---|---|
+| ![品目詳細](docs/screenshots/detail.png) | ![モバイル](docs/screenshots/mobile.png) |
+
 ## 機能
 - 品目一覧（品名・カテゴリ・在庫数・単価・状態）
 - 在庫数と発注点の比較による状態表示（十分／要発注／欠品）
 - 品目の追加（フォーム→API→一覧に即反映）
 - 品目の詳細ページ（動的ルーティング）
+- 入出庫の記録（品目詳細のフォーム→`POST /api/items/[id]/movements`）。出庫で在庫がマイナスになる場合は400「在庫数が不足しています（現在 N）」、存在しない品目は404。履歴（日時はAsia/Tokyo・区分・数量・備考・処理後在庫）を品目に保持し、新しい順に表示。履歴の無い既存データもそのまま動く
+- 一覧のカテゴリ絞り込み（`?category=`）と品名の部分一致検索（`?q=`）。サーバーコンポーネント側で処理（JS不要のGETフォーム）
 - 入力バリデーション（`lib/validate.ts`、依存ライブラリなしの手書き）。品名は必須（100文字以内）、カテゴリは文字列（50文字以内・省略可）、在庫数・発注点・単価は0以上の整数（在庫数・発注点は100万、単価は1億円まで）。JSON以外・オブジェクト以外（`null`・配列など）・真偽値/小数/文字列の数値は400で日本語のエラーメッセージを返し、想定外のサーバーエラーは詳細を伏せて500を返す
 
 ## 技術構成
@@ -35,6 +46,8 @@ node smoke-test.mjs  # 追加→一覧反映→低在庫表示→バリデーシ
 - 在庫数マイナス・品名未入力・`null`ボディ・真偽値/小数の在庫数・オブジェクトのカテゴリはAPIが400で拒否する
 - 保存先は環境変数 `DATA_FILE` で差し替え可能（既定は `data/items.json`）
 - 存在しない品目IDの詳細ページは404になる
+- 入庫で在庫が増え、履歴に記録される／在庫を超える出庫は日本語メッセージつきで400／存在しない品目への入出庫は404／数量0・小数・不正な区分・101文字の備考は400
+- カテゴリ絞り込み・品名検索の結果と、該当なし時のメッセージが表示される
 
 ブラウザでの表示は 375px（モバイル）・768px（タブレット）・1280px（デスクトップ）の3幅で目視確認済み（テーブルは横スクロールで崩れない）。
 
@@ -45,12 +58,14 @@ app/
   page.tsx             品目一覧・追加フォーム
   items/[id]/page.tsx  品目詳細
   api/items/route.ts   GET(一覧) / POST(追加)
+  api/items/[id]/movements/route.ts  POST(入出庫)
 components/
-  ItemTable.tsx  StockBadge.tsx  NewItemForm.tsx
+  ItemTable.tsx  StockBadge.tsx  NewItemForm.tsx  MovementForm.tsx  ItemFilter.tsx
 lib/
   types.ts   型定義・状態判定ロジック
   store.ts   データ読み書き
 data/
   items.json 架空データ（5件の初期シード）
+docs/screenshots/  README用スクリーンショット
 smoke-test.mjs  起動中のサーバーに対する自動検証スクリプト
 ```
