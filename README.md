@@ -1,14 +1,14 @@
 # 在庫管理ダッシュボード（デモ・架空データ）
 
 小規模な在庫管理システムの制作例。Next.js（App Router）+ React + TypeScript + Tailwind CSS で構築。
-**すべて架空データ**（`data/items.json`）で検証した自主制作例で、顧客案件としては表現しない。
+業務で受託した案件ではなく、**すべて架空データ**（`data/items.json`）で作成した自主制作のサンプルです。
 
 ## 機能
 - 品目一覧（品名・カテゴリ・在庫数・単価・状態）
 - 在庫数と発注点の比較による状態表示（十分／要発注／欠品）
 - 品目の追加（フォーム→API→一覧に即反映）
 - 品目の詳細ページ（動的ルーティング）
-- 入力バリデーション（品名必須・数値項目は0以上・不正な値は400を返す）
+- 入力バリデーション（品名必須・在庫数/発注点/単価は数値かつ0以上・JSONとして読めないリクエストは400）。整数のみ・型の厳密な検証は未実装
 
 ## 技術構成
 - **Next.js 14**（App Router）: ページ（`app/page.tsx`・`app/items/[id]/page.tsx`）と API ルート（`app/api/items/route.ts`）を同一プロジェクトで実装
@@ -25,7 +25,7 @@ npm install
 npm run typecheck   # tsc --noEmit
 npm run build       # 本番ビルド（型チェック含む）
 npm run start &      # http://localhost:3000
-node smoke-test.mjs  # 追加→一覧反映→低在庫表示→バリデーション400→404 を自動検証
+node smoke-test.mjs  # 追加→一覧反映→低在庫表示→基本的なバリデーション400→404 を自動検証
 ```
 
 `smoke-test.mjs` は次を確認する:
